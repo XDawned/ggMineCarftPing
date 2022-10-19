@@ -1,70 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" type="image/png" href="https://zctnet.top:666/favicon.png">
+    <title>Asgard在线服务器查询</title>
+    <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
-        el-container{
-            margin:0px;
-            padding: 0px;
-        }
-        .icon{
-            padding-top: 5px;
-        }
-        .userIcon{
-            margin-left: 1%;
-        }
         .userId{
             background-color: lightgray;
             width: auto;
             margin-left: 2%;
             margin-top: 5px;
         }
-        .red{
-            border: 1px;
+        .table-expand label {
+            width: 90px;
+            color: #99a9bf;
         }
-        .favicon{
-            background: white;
-            border: 1px solid gray;
-            border-radius: 2%;
-            box-shadow: #8c939d 2px 2px 1px 1px;
+        .table-expand .el-form-item {
+            border: 1px solid blue;
+            margin-right: 0;
+            margin-bottom: 0;
             width: 80%;
-            height: auto;
-            overflow: hidden;
-            scrollbar:none;
+        }
+        el-table-column{
+            border: 1px solid red;
         }
     </style>
-
 </head>
 <body>
 <div id="app">
     <el-container>
-        <el-header style="text-align: center;padding-top: 1%;width: 100%;height: auto">
-            <h1>Asgard 服务器总览</h1>
-            <el-row type="flex" justify="center">
-                <el-col :span="20" style="border: 3px double grey;height: 10%;padding-bottom: 1%">
+        <el-header style="text-align: center;width: 100%;height: auto">
+            <h1>Asgard服务器状态查询</h1>
+            <el-row type="flex" justify="center" style="z-index: 100">
+                <el-col :span="20" style="border: 3px double grey;height: auto;padding-bottom: 1%">
                     <p>
-                        目前总共有 {{tableData1.players.now+tableData2.players.now+tableData3.players.now+tableData4.players.now+tableData5.players.now+tableData6.players.now}} 名玩家在服务器中游玩
+                        目前总共有 {{tableDatas[0].players_online+tableDatas[1].players_online+tableDatas[2].players_online+tableDatas[3].players_online+tableDatas[4].players_online+tableDatas[5].players_online}} 名玩家在服务器中游玩
                     </p>
                     <el-col style="height: auto;width: 100%">
                         <el-row>
-                            <el-col :span="4" class="userId" v-for="player in tableData1.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[0].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
-                            <el-col :span="4" class="userId" v-for="player in tableData2.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[1].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
-                            <el-col :span="4" class="userId" v-for="player in tableData3.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[2].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
-                            <el-col :span="4" class="userId" v-for="player in tableData4.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[3].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
-                            <el-col :span="4" class="userId" v-for="player in tableData5.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[4].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
-                            <el-col :span="4" class="userId" v-for="player in tableData6.players.sample">
+                            <el-col :span="4" class="userId" v-for="player in tableDatas[5].players">
+                                <img width="32" height="32" :src='headApi+player.name'/>
                                 {{player.name}}
                             </el-col>
 
@@ -73,796 +67,166 @@
                 </el-col>
             </el-row>
         </el-header>
+        <el-main>
+            <el-table
+                    :data="tableDatas"
+                    stripe
+                    :key="key"
+                    :header-cell-style="{'text-align':'center'}"
+                    :cell-style="{'text-align':'center'}">
+                <el-table-column type="expand">
+                    <i class="el-icon-caret-right"></i>
+                    <template slot-scope="props">
+                        <el-table
+                                :data="props.row.players"
+                                style="width: 90%;margin-left: 5%"
+                                row-key="id"
+                                lazy
+                                :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                            <el-table-column
+                                    width="64">
+                                <template slot-scope="playerInfo">
+                                    <img width="32" height="32" :src='headApi+playerInfo.row.name'/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    width="720">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="LOGO"
+                        width="128">
+                    <template slot-scope="props">
+                        <img width="64" height="64" :src='props.row.favicon'/>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="服号"
+                        width="96">
+                </el-table-column>
+                <el-table-column
+                        label="MOTD"
+                        width="880">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.status!='离线'">
+                            <div v-if="scope.row.motd.text.trim()!=''">{{scope.row.motd.text}}</div>
+                            <div v-if="scope.row.motd.text.trim()==''">
+                            <span :style="i" v-for="i in scope.row.motd.extra">
+                                {{i.text}}
+                            </span>
+                            </div>
+                        </div>
+                        <div v-if="scope.row.status=='离线'">
+                            加载中，如过慢请尝试刷新页面
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="在线玩家"
+                        width="180">
+                    <template slot-scope="scope">
+                        {{scope.row.players_online}}/{{scope.row.players_max}}
+                    </template>
 
-        <el-main style="width: 100%;height: auto" >
-            <el-row type="flex" justify="center">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>一服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData1.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData1.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData1.online">
-                                            <div v-if="tableData1.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData1.motd}}
-                                            </div>
-                                            <div v-if="tableData1.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData1.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData1.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
+                </el-table-column>
+                <el-table-column
+                        label="服务器"
+                        width="128">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.status!='离线'">
+                            <span>online</span>
+                            <i class="el-icon-success" style="color: green"></i>
+                        </div>
+                        <div v-if="scope.row.status=='离线'">
+                            <span>offline</span>
+                            <i class="el-icon-error" style="color: red"></i>
+                        </div>
+                    </template>
 
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData1.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData1.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData1.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData1.players.now}}/{{tableData1.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-top: 1%">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>二服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData2.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData2.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData2.online">
-                                            <div v-if="tableData2.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData2.motd}}
-                                            </div>
-                                            <div v-if="tableData2.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData2.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData2.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData2.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData2.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData2.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData2.players.now}}/{{tableData2.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-top: 1%">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>三服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData3.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData3.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData3.online">
-                                            <div v-if="tableData3.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData3.motd}}
-                                            </div>
-                                            <div v-if="tableData3.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData3.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData3.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData3.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData3.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData3.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData3.players.now}}/{{tableData3.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-top: 1%">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>四服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData4.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData4.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData4.online">
-                                            <div v-if="tableData4.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData4.motd}}
-                                            </div>
-                                            <div v-if="tableData4.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData4.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData4.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData4.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData4.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData4.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData4.players.now}}/{{tableData4.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-top: 1%">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>五服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData5.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData5.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData5.online">
-                                            <div v-if="tableData5.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData5.motd}}
-                                            </div>
-                                            <div v-if="tableData5.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData5.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData5.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData5.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData5.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData5.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData5.players.now}}/{{tableData5.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-top: 1%">
-                <el-col :span="16">
-                    <el-card v-loading="loading[0]" shadow="hover" style="border: 1px solid green;height: auto;background-color: silver">
-                        <el-container height="0">
-                            <el-row>六服</el-row>
-                            <el-aside style="width: 10%;margin-left: 1%;height: 100%;overflow: hidden">
-                                <img class="favicon" :src="tableData6.favicon"/>
-                            </el-aside>
-                            <el-main>
-                                <el-row>
-                                    <el-col :span="13">
-                                        <div v-if="!tableData6.online">
-                                            服务器已离线
-                                        </div>
-                                        <div v-if="tableData6.online">
-                                            <div v-if="tableData6.motd_json.text.trim()!=''">
-                                                <!--                                                服务器在线但是无彩色描述-->
-                                                {{tableData6.motd}}
-                                            </div>
-                                            <div v-if="tableData6.motd_json.text.trim()==''">
-                                                <span :style="motd" v-for="motd in tableData6.motd_json.extra">
-                                                    {{motd.text}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </el-col>
-                                    <el-row>
-                                        <el-col :span="4" :offset="2">
-                                            在线玩家：
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                玩&nbsp;家&nbsp;ID
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item v-for="player in tableData6.players.sample">
-                                                        {{player.name}}
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="6" :offset="15" style="margin-top: 2%">
-                                            模组信息:
-                                            <el-dropdown>
-                                            <span class="el-dropdown-link">
-                                                &nbsp;&nbsp;&nbsp;开发中...
-                                                <i class="el-icon-arrow-down el-icon--right" style="border: 1px solid white"></i>
-                                            </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item>
-                                                        敬请期待....
-                                                    </el-dropdown-item>
-
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </el-col>
-                                        <el-col :span="2" :offset="1">
-
-                                            <div v-if="tableData6.online">
-                                                <span>online</span>
-                                                <i class="el-icon-success" style="color: green"></i>
-                                            </div>
-                                            <div v-if="!tableData6.online">
-                                                <i class="el-icon-error" style="color: red"></i>
-                                            </div>
-                                        </el-col>
-
-                                    </el-row>
-                                    <el-row>
-                                        <el-col :span="5">
-                                            服务器版本：[{{tableData6.server.name}}]
-                                        </el-col>
-                                        <el-col :offset="1" :span="3">
-                                            <span>在线人数：{{tableData6.players.now}}/{{tableData6.players.max}}</span>
-                                        </el-col>
-                                    </el-row>
-                                </el-row>
-                            </el-main>
-                        </el-container>
-                    </el-card>
-                </el-col>
-            </el-row>
+                </el-table-column>
+            </el-table>
         </el-main>
-
-        <el-footer style="border: 1px solid red">
-            <div style="text-align: center">
-                Asgard
-                <br/>
-                不忘初心，砥砺前行
-            </div>
-
-        </el-footer>
     </el-container>
-
 </div>
-</body>
+
 
 <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
 <script>
-    var url='https://mcapi.us/server/status?ip=lt.zctnet.top'
     var app = new Vue({
         el: '#app',
         data: {
-            message: 'Hello Vue!',
-            loading: [true,true,true,true,true,true],
-            tableData1: {
-                "status":"success",
-                "online":false,
-                "motd":"        -=| Asgard公益插件纯净服 |=-            Q群:650152616\n  <养老丨建筑丨科技丨生电丨稳定丨防熊>    1.19现已更新工业！",
-                "motd_json":{
-                    "extra":[{"color":"dark_purple","text":"-"},
-                        {"color":"light_purple","text":"="},
-                        {"color":"light_purple","text":"|"},
-                        {"text":" "},{"color":"light_purple","text":"A"},
-                        {"color":"light_purple","text":"s"},
-                        {"color":"light_purple","text":"g"},
-                        {"color":"light_purple","text":"a"},
-                        {"color":"light_purple","text":"r"},
-                        {"color":"red","text":"d"},
-                        {"color":"red","text":"公"},
-                        {"color":"red","text":"益"},
-                        {"color":"red","text":"插"},
-                        {"color":"red","text":"件"},
-                        {"color":"red","text":"纯"},
-                        {"color":"red","text":"净"},
-                        {"color":"red","text":"服"},
-                        {"text":" "},
-                        {"color":"yellow","text":"|"},
-                        {"color":"yellow","text":"="},
-                        {"color":"gold","text":"-"},
-                        {"text":"            "},
-                        {"color":"red","text":"Q"},
-                        {"color":"red","text":"群"},
-                        {"color":"red","text":":"},
-                        {"color":"red","text":"6"},
-                        {"color":"yellow","text":"5"},
-                        {"color":"yellow","text":"0"},
-                        {"color":"yellow","text":"1"},
-                        {"color":"yellow","text":"5"},
-                        {"color":"yellow","text":"2"},
-                        {"color":"green","text":"6"},
-                        {"color":"green","text":"1"},
-                        {"color":"green","text":"6"},
-                        {"text":"\n  "},
-                        {"color":"yellow","text":"<"},
-                        {"color":"yellow","text":"养"},
-                        {"color":"yellow","text":"老"},
-                        {"color":"yellow","text":"丨"},
-                        {"color":"green","text":"建"},
-                        {"color":"green","text":"筑"},
-                        {"color":"green","text":"丨"},
-                        {"color":"aqua","text":"科"},
-                        {"color":"aqua","text":"技"},
-                        {"color":"aqua","text":"丨生"},
-                        {"color":"aqua","text":"电"},
-                        {"color":"aqua","text":"丨"},
-                        {"color":"aqua","text":"稳"},
-                        {"color":"aqua","text":"定"},
-                        {"color":"aqua","text":"丨"},
-                        {"color":"gray","text":"防"},
-                        {"color":"gray","text":"熊"},
-                        {"color":"red","text":">"},
-                        {"text":"    "},
-                        {"color":"gold","text":"1"},
-                        {"color":"gold","text":"."},
-                        {"color":"green","text":"1"},
-                        {"color":"green","text":"9"},
-                        {"color":"dark_aqua","text":"现"},
-                        {"color":"dark_aqua","text":"已"},
-                        {"color":"blue","text":"更"},
-                        {"color":"blue","text":"新"},
-                        {"color":"dark_purple","text":"工"},
-                        {"color":"dark_purple","text":"业"},
-                        {"color":"red","text":"！"}],
-                    "text":"        "
+            headApi:"https://mineskin.eu/avatar/",
+            urls:[
+                'https://api.imlazy.ink/mcapi/?name=一服&host=zctnet.top&type=json',
+                'https://api.imlazy.ink/mcapi/?name=二服&host=zctnet.top:25566&type=json',
+                'https://api.imlazy.ink/mcapi/?name=三服&host=zctnet.top:25567&type=json',
+                'https://api.imlazy.ink/mcapi/?name=四服&host=lt.zctnet.top&type=json',
+                'https://api.imlazy.ink/mcapi/?name=五服&host=zctnet.top:25569&type=json',
+                'https://api.imlazy.ink/mcapi/?name=六服&host=zctnet.top:25568&type=json'
+            ],
+            key:0,//手动刷新table
+            tableDatas: [
+                {
+                    /*伪数据*/
+                    "loading":true,
+                    "name": null,
+                    "status": "离线",
+                    "motd": {
+                        "extra":[],
+                        "text":""
+                    },
+                    "players_max": null,
+                    "players_online": null,
+                    "players": null,
+                    "serverId": null,
+                    "version": null,
+                    "modInfo": null,
+                    "hostip": null,
+                    "software": null,
+                    "gametype": null,
+                    "platform": null,
+                    "map": null,
+                    "plugins": null,
+                    "NintendoLimited": null,
+                    "favicon": null
                 },
-                "favicon":"data:image/png;base64,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",
-                "error":null,
-                "players":{
-                    "max":233,
-                    "now":0,
-                    "sample":[]
-                },
-                "server":{
-                    "name":"Paper 1.19.2",
-                    "protocol":760
-                },
-                "last_updated":"1665391529",
-                "duration":"1358689884"
-            },
-            tableData2: {
-                // 伪数据，应对ping加载，ping出后会被覆盖
-                "status": "success",
-                "online": true,
-                "motd": "Asgard 高版本模组整合",
-                "motd_json": { "text": "Asgard Mod Server" },
-                "favicon": "data:image/png;base64,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",
-                "error": null,
-                "players": {
-                    "max": 20,
-                    "now": 0,
-                    "sample": [
-
-                    ] },
-                "server": {
-                    "name": "1.19.2",
-                    "protocol": 754
-                },
-                "last_updated": "1665293854",
-                "duration": "2018015817"
-            },
-            tableData3: {
-                // 伪数据，应对ping加载，ping出后会被覆盖
-                "status": "success",
-                "online": true,
-                "motd": "Asgard 冒险整合包",
-                "motd_json": { "text": "Asgard Mod Server" },
-                "favicon": "data:image/png;base64,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",
-                "error": null,
-                "players": {
-                    "max": 20,
-                    "now": 0,
-                    "sample": [
-
-                    ] },
-                "server": {
-                    "name": "1.12.2",
-                    "protocol": 754
-                },
-                "last_updated": "1665293854",
-                "duration": "2018015817"
-            },
-            tableData4:{
-                // 伪数据，应对ping加载，ping出后会被覆盖
-                "status": "success",
-                "online": true,
-                "motd": "Asgard 随机整合包快照",
-                "motd_json": { "text": "Asgard Mod Server" },
-                "favicon": "data:image/png;base64,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",
-                "error": null,
-                "players": {
-                    "max": 20,
-                    "now": 0,
-                    "sample": [
-                    ] },
-                "server": {
-                    "name": "1.18.2",
-                    "protocol": 754
-                },
-                "last_updated": "1665293854",
-                "duration": "2018015817"
-            },
-            tableData5: {
-                // 伪数据，应对ping加载，ping出后会被覆盖
-                "status": "success",
-                "online": true,
-                "motd": "Asgard UnityCraft",
-                "motd_json": {
-                    "extra": [
-                        {
-                            "color": "dark_blue",
-                            "text": "Asgard"
-                        },
-                        {
-                            "color": "gold",
-                            "text": "Mod "
-                        },
-                        {
-                            "color": "dark_green",
-                            "text": "Server"
-                        }
-                    ],
-                    "text": "Asgard Mod Server"
-                },
-                "favicon": "data:image/png;base64,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",
-                "error": null,
-                "players": {
-                    "max": 20,
-                    "now": 0,
-                    "sample": [
-
-                    ] },
-                "server": {
-                    "name": "1.16.5",
-                    "protocol": 754
-                },
-                "last_updated": "1665293854",
-                "duration": "2018015817"
-            },
-            tableData6: {
-                // 伪数据，应对ping加载，ping出后会被覆盖
-                "status": "success",
-                "online": true,
-                "motd": "Asgard 长期整合包",
-                "motd_json": { "text": "Asgard Enigmatica 6 Expert Server" },
-                "favicon": "data:image/png;base64,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",
-                "error": null,
-                "players": {
-                    "max": 20,
-                    "now": 0,
-                    "sample": [
-
-                    ] },
-                "server": {
-                    "name": "1.16.5",
-                    "protocol": 754
-                },
-                "last_updated": "1665293854",
-                "duration": "2018015817"
-            }
+                {},
+                {},
+                {},
+                {},
+                {}]
         },
         created(){
-            this.getInfo();
+            this.tableDatas[1]=this.tableDatas[0];
+            this.tableDatas[2]=this.tableDatas[0];
+            this.tableDatas[3]=this.tableDatas[0];
+            this.tableDatas[4]=this.tableDatas[0];
+            this.tableDatas[5]=this.tableDatas[0];
+            this.getInfos();
         },
         methods:{
-            getInfo(){
-                axios.get('https://mcapi.us/server/status?ip=zctnet.top').then(response=>{
-                    this.tableData1=response.data;
-                    if(this.tableData1.online){//在线情况下才考虑色彩转化
-                        if('extra' in this.tableData1.motd_json){//存在特殊颜色再转化
-                            this.turnColor(this.tableData1.motd_json.extra);
+            getInfos(){
+                for(let i=0;i<6;i++){
+                    this.getInfo(i)
+                }
+            },
+            async getInfo(i){//获取服务器信息
+                that=this;
+                axios.get(that.urls[i]).then(response=>{
+                    that.tableDatas[i]=response.data
+                    if(that.tableDatas[i].status!='离线'){
+                        if('extra' in that.tableDatas[i].motd){
+                            that.turnColor(that.tableDatas[i].motd.extra);
                         }
+                        that.key = Math.random()//手动刷新table
                     }
-                    this.loading[0]=false
-                })
-                axios.get('https://mcapi.us/server/status?ip=zctnet.top&port=25566').then(response=>{
-                    this.tableData2=response.data;
-                    if(this.tableData2.online){
-                        if('extra' in this.tableData2.motd_json){
-                            this.turnColor(this.tableData2.motd_json.extra);
-                        }
-                    }
-                    this.loading[1]=false
-                })
-                axios.get('https://mcapi.us/server/status?ip=zctnet.top&port=25567').then(response=>{
-                    this.tableData3=response.data;
-                    if(this.tableData3.online){
-                        if('extra' in this.tableData3.motd_json){
-                            this.turnColor(this.tableData3.motd_json.extra);
-                        }
-                    }
-                    this.loading[2]=false
-                })
-                axios.get('https://mcapi.us/server/status?ip=lt.zctnet.top').then(response=>{
-                    this.tableData4=response.data;
-                    if(this.tableData4.online){
-                        if('extra' in this.tableData4.motd_json){
-                            this.turnColor(this.tableData4.motd_json.extra);
-                        }
-                    }
-                    this.loading[3]=false
-                })
-                axios.get('https://mcapi.us/server/status?ip=zctnet.top&port=25569').then(response=>{
-                    this.tableData5=response.data;
-                    if(this.tableData5.motd_json!=null){
-                        if('extra' in this.tableData5.motd_json){
-                            this.turnColor(this.tableData5.motd_json.extra);
-                        }
-                    }
-                    this.loading[4]=false
-                })
-                axios.get('https://mcapi.us/server/status?ip=zctnet.top&port=25568').then(response=>{
-                    this.tableData6=response.data;
-                    if(this.tableData6.online){
-                        if('extra' in this.tableData6.motd_json){
-                            this.turnColor(this.tableData6.motd_json.extra);
-                        }
-                    }
-                    this.loading[5]=false
                 })
             },
             turnColor:function(motds){//motd_json颜色转化
@@ -870,13 +234,10 @@
                     if('color' in motds[i]){
                         motds[i].color=motds[i].color.slice(motds[i].color.indexOf('_')+1);
                     }
-                    motds[i].text=motds[i].text.replace("\\n","***");
-                    console.log(motds[i].text)
                 }
-
-            }
         }
-    })
+    }
+})
 
 </script>
-</html>
+</body></html>
