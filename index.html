@@ -215,6 +215,11 @@
             getInfos(){
                 for(let i=0;i<6;i++){
                     this.getInfo(i)
+                    if(this.tableDatas[i].status=='离线'){//防止api返回错误信息，2s后再次重新ping
+                        setTimeout(() => {
+                            this.getInfo(i);
+                        }, 2000);
+                    }
                 }
             },
             async getInfo(i){//获取服务器信息
