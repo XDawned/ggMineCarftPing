@@ -108,6 +108,29 @@
                         label="服号"
                         width="96">
                 </el-table-column>
+				<el-table-column
+                        label="在线玩家"
+                        width="180">
+                    <template slot-scope="scope">
+                        {{scope.row.players_online}}/{{scope.row.players_max}}
+                    </template>
+
+                </el-table-column>
+				<el-table-column
+                        label="服务器"
+                        width="128">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.status!='离线'">
+                            <span>online</span>
+                            <i class="el-icon-success" style="color: green"></i>
+                        </div>
+                        <div v-if="scope.row.status=='离线'">
+                            <span>offline</span>
+                            <i class="el-icon-error" style="color: red"></i>
+                        </div>
+                    </template>
+
+                </el-table-column>
                 <el-table-column
                         label="MOTD"
                         width="880">
@@ -124,29 +147,6 @@
                             加载中，如过慢请尝试刷新页面
                         </div>
                     </template>
-                </el-table-column>
-                <el-table-column
-                        label="在线玩家"
-                        width="180">
-                    <template slot-scope="scope">
-                        {{scope.row.players_online}}/{{scope.row.players_max}}
-                    </template>
-
-                </el-table-column>
-                <el-table-column
-                        label="服务器"
-                        width="128">
-                    <template slot-scope="scope">
-                        <div v-if="scope.row.status!='离线'">
-                            <span>online</span>
-                            <i class="el-icon-success" style="color: green"></i>
-                        </div>
-                        <div v-if="scope.row.status=='离线'">
-                            <span>offline</span>
-                            <i class="el-icon-error" style="color: red"></i>
-                        </div>
-                    </template>
-
                 </el-table-column>
             </el-table>
         </el-main>
@@ -214,7 +214,7 @@
         methods:{
             getInfos(){
                 for(let i=0;i<6;i++){
-                    this.getInfo(i)
+                    this.getInfo(i);
                     if(this.tableDatas[i].status=='离线'){//防止api返回错误信息，2s后再次重新ping
                         setTimeout(() => {
                             this.getInfo(i);
