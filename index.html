@@ -72,6 +72,7 @@
                     :data="tableDatas"
                     stripe
                     :key="key"
+		    fit
                     :header-cell-style="{'text-align':'center'}"
                     :cell-style="{'text-align':'center'}">
                 <el-table-column type="expand">
@@ -132,8 +133,7 @@
 
                 </el-table-column>
                 <el-table-column
-                        label="MOTD"
-                        width="880">
+                        label="MOTD">
                     <template slot-scope="scope">
                         <div v-if="scope.row.status!='离线'">
                             <div v-if="scope.row.motd.text.trim()!=''">{{scope.row.motd.text}}</div>
