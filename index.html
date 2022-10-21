@@ -133,7 +133,7 @@
                 </el-table-column>
                 <el-table-column
                         label="MOTD"
-                        width="780">
+                        width="880">
                     <template slot-scope="scope">
                         <div v-if="scope.row.status!='离线'">
                             <div v-if="scope.row.motd.text.trim()!=''">{{scope.row.motd.text}}</div>
@@ -215,10 +215,10 @@
             getInfos(){
                 for(let i=0;i<6;i++){
                     this.getInfo(i);
-                    if(this.tableDatas[i].status=='离线'){//防止api返回错误信息，2s后再次重新ping
-                        setTimeout(() => {
+                    if(this.tableDatas[i].status=='离线'){//防止api返回错误信息，8s后再次重新ping离线的服务器
+                        setInterval(() => {
                             this.getInfo(i);
-                        }, 2000);
+                        }, 8000);
                     }
                 }
             },
