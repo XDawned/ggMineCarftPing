@@ -68,87 +68,93 @@
             </el-row>
         </el-header>
         <el-main>
-            <el-table
-                    :data="tableDatas"
-                    stripe
-                    :key="key"
-		    fit
-                    :header-cell-style="{'text-align':'center'}"
-                    :cell-style="{'text-align':'center'}">
-                <el-table-column type="expand">
-                    <i class="el-icon-caret-right"></i>
-                    <template slot-scope="props">
-                        <el-table
-                                :data="props.row.players"
-                                style="width: 90%;margin-left: 5%"
-                                row-key="id"
-                                lazy
-                                :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-                            <el-table-column
-                                    width="64">
-                                <template slot-scope="playerInfo">
-                                    <img width="32" height="32" :src='headApi+playerInfo.row.name'/>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    width="720">
-                            </el-table-column>
-                        </el-table>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        label="LOGO"
-                        width="128">
-                    <template slot-scope="props">
-                        <img width="64" height="64" :src='props.row.favicon'/>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="服号"
-                        width="96">
-                </el-table-column>
-				<el-table-column
-                        label="在线玩家"
-                        width="180">
-                    <template slot-scope="scope">
-                        {{scope.row.players_online}}/{{scope.row.players_max}}
-                    </template>
+            <el-row type="flex" justify="center">
+                <el-col :span="20">
+                    <el-table
+                            :data="tableDatas"
+                            stripe
+                            :key="key"
+                            fit
+                            :header-cell-style="{'text-align':'center'}"
+                            :cell-style="{'text-align':'center'}">
+                        <el-table-column type="expand">
+                            <i class="el-icon-caret-right"></i>
+                            <template slot-scope="props">
+                                <el-table
+                                        :data="props.row.players"
+                                        style="width: 90%;margin-left: 5%"
+                                        row-key="id"
+                                        lazy
+                                        :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                                    <el-table-column
+                                            width="64">
+                                        <template slot-scope="playerInfo">
+                                            <img width="32" height="32" :src='headApi+playerInfo.row.name'/>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="name"
+                                            width="720">
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="LOGO"
+                                width="128">
+                            <template slot-scope="props">
+                                <img width="64" height="64" :src='props.row.favicon'/>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="name"
+                                label="服号"
+                                width="96">
+                        </el-table-column>
+                        <el-table-column
+                                label="在线玩家"
+                                width="180">
+                            <template slot-scope="scope">
+                                {{scope.row.players_online}}/{{scope.row.players_max}}
+                            </template>
 
-                </el-table-column>
-				<el-table-column
-                        label="服务器"
-                        width="128">
-                    <template slot-scope="scope">
-                        <div v-if="scope.row.status!='离线'">
-                            <span>online</span>
-                            <i class="el-icon-success" style="color: green"></i>
-                        </div>
-                        <div v-if="scope.row.status=='离线'">
-                            <span>offline</span>
-                            <i class="el-icon-error" style="color: red"></i>
-                        </div>
-                    </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="服务器"
+                                width="128">
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status!='离线'">
+                                    <span>online</span>
+                                    <i class="el-icon-success" style="color: green"></i>
+                                </div>
+                                <div v-if="scope.row.status=='离线'">
+                                    <span>offline</span>
+                                    <i class="el-icon-error" style="color: red"></i>
+                                </div>
+                            </template>
 
-                </el-table-column>
-                <el-table-column
-                        label="MOTD">
-                    <template slot-scope="scope">
-                        <div v-if="scope.row.status!='离线'">
-                            <div v-if="scope.row.motd.text.trim()!=''">{{scope.row.motd.text}}</div>
-                            <div v-if="scope.row.motd.text.trim()==''">
+                        </el-table-column>
+                        <el-table-column
+                                label="MOTD"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status!='离线'">
+                                    <div v-if="scope.row.motd.text.trim()!=''">{{scope.row.motd.text}}</div>
+                                    <div v-if="scope.row.motd.text.trim()==''">
                             <span :style="i" v-for="i in scope.row.motd.extra">
                                 {{i.text}}
                             </span>
-                            </div>
-                        </div>
-                        <div v-if="scope.row.status=='离线'">
-                            加载中，如过慢请尝试刷新页面
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
+                                    </div>
+                                </div>
+                                <div v-if="scope.row.status=='离线'">
+                                    加载中，如过慢请尝试刷新页面
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+
         </el-main>
     </el-container>
 </div>
@@ -240,9 +246,9 @@
                         motds[i].color=motds[i].color.slice(motds[i].color.indexOf('_')+1);
                     }
                 }
+            }
         }
-    }
-})
+    })
 
 </script>
 </body></html>
